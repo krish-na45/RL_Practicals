@@ -1,0 +1,48 @@
+ K-Means Clustering --- 
+import numpy as np 
+import matplotlib.pyplot as plt 
+from sklearn.datasets import load_iris 
+from sklearn.cluster import KMeans, 
+AgglomerativeClustering 
+from sklearn.preprocessing import 
+StandardScaler 
+from scipy.cluster.hierarchy import 
+dendrogram, linkage 
+# Load dataset 
+data = load_iris() 
+X = data.data 
+# Normalize data 
+scaler = StandardScaler() 
+
+X_scaled = scaler.fit_transform(X) 
+ 
+# Elbow Method to find optimal K 
+wcss = [] 
+for k in range(1, 11): 
+kmeans = KMeans(n_clusters=k, 
+random_state=42, n_init='auto') 
+kmeans.fit(X_scaled) 
+wcss.append(kmeans.inertia_) 
+ 
+# Plot Elbow curve 
+plt.figure(figsize=(8, 4)) 
+plt.plot(range(1, 11), wcss, marker='o') 
+plt.xlabel("Number of Clusters (K)") 
+plt.ylabel("WCSS") 
+plt.title("Elbow Method") 
+plt.show() 
+ 
+# Apply K-Means with optimal K (3) 
+kmeans = KMeans(n_clusters=3, random_state=42, 
+n_init='auto') 
+clusters = kmeans.fit_predict(X_scaled) 
+ 
+# Visualize K-Means clusters (First two 
+features) 
+plt.figure(figsize=(8, 4)) 
+plt.scatter(X_scaled[:, 0], X_scaled[:, 1], 
+c=clusters, cmap='viridis') 
+plt.xlabel("Feature 1 (Sepal Length)") 
+plt.ylabel("Feature 2 (Sepal Width)") 
+plt.title("K-Means Clustering") 
+plt.show()
